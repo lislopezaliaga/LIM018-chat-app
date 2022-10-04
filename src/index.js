@@ -1,16 +1,16 @@
 const express = require('express');
-
 const morgan = require('morgan');
-
 const { Server } = require('socket.io');
-
 const http = require('http');
-
 const cors = require('cors');
+const client = require('./conexion_db');
 
 const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
+
+// importamos la ruta
+const messageRoutes = require('./routes/message.routes');
 
 const io = new Server(server, {
   cors: {
@@ -18,17 +18,27 @@ const io = new Server(server, {
   },
 });
 
+client
+  .connect()
+  .then((res) => console.log('conectado a la BD'))
+  .catch((error) => console.log('error de conexión'));
+
 app.use(cors());
 
 app.use(morgan('dev'));
+app.use(express.json());
+
+
+app.use(messageRoutes);
+
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
   socket.on('chatmessage', (message) => {
     console.log(message);
     socket.broadcast.emit('message', {
-      body:message,
-      from:socket.id,
+      body: message,
+      from: socket.id,
     });
   });
 });

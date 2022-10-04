@@ -1,7 +1,8 @@
-const client = require('./db');
+const client = require('./conexion_db');
 
 client.connect();
-function insertUsers(name, email, password, estado) {
+
+const users = function insertUsers(name, email, password, estado) {
   client
     .query(
       `INSERT INTO public.users(name, email, password, estado)
@@ -16,7 +17,8 @@ function insertUsers(name, email, password, estado) {
       console.log(err);
       client.end();
     });
-}
+};
+
 // insertUsers('Carlos', 'email', '123456', true);
 
 function viewUsers(estado) {
@@ -76,3 +78,4 @@ viewUsers(true);
 //   });
 //   client.end();
 // });
+module.exports = users;
