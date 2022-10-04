@@ -1,47 +1,59 @@
 const express = require('express');
 
-const app = express();
-
-const http = require('http');
-
-const server = http.createServer(app);
+const morgan = require('morgan');
 
 const { Server } = require('socket.io');
 
-const io = new Server(server);
-// const client = require('./db');
+const http = require('http');
 
-const port = process.env.PORT || 3000;
+const cors = require('cors');
 
-app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/index.html`);
+const port = process.env.PORT || 4000;
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
 });
+
+app.use(cors());
+
+app.use(morgan('dev'));
+
+io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
+  socket.on('chatmessage', (message) => {
+    console.log(message);
+    socket.broadcast.emit('message', {
+      body:message,
+      from:socket.id,
+    });
+  });
+});
+server.listen(port);
+console.log('server');
+
+// const io = require('socket.io')(http);
+
+// app.get('/', (req, res) => {
+//   res.sendFile(`${__dirname}/index.html`);
+// });
 
 // io.on('connection', (socket) => {
 //   console.log('a user connected');
-// });
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-
-// client.connect();
-// console.log(client);
-
-// client
-//   .query('SELECT * FROM users')
-//   .then((response) => {
-//     console.log('conectado');
-//     console.log(response.rows);
-//     client.end();
-//   })
-//   .catch((err) => {
-//     console.log('error');
-//     client.end();
+//   socket.on('disconnect', () => {
+//     console.log('user disconnected');
 //   });
+// });
+
+// io.on('connection', (socket) => {
+//   socket.on('chat message', (msg) => {
+//     io.emit('chat message', msg);
+//   });
+// });
+
+// http.listen(port, () => {
+//   console.log(`Socket.IO server running at http://localhost:${port}/`);
+// });
