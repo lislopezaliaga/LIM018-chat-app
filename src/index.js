@@ -28,9 +28,12 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-
 app.use(messageRoutes);
-
+app.use((err, req, res, next) => {
+  return res.json({
+    message: err.message,
+  });
+});
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
