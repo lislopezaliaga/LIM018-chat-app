@@ -19,6 +19,7 @@ const signUpUsers = async (req, res, next) => {
 const getAllUsers = async (req, res, next) => {
   try {
     const allMessages = await client.query(`SELECT * FROM users`);
+    console.log(req.rawHeaders[9]);
     res.json(allMessages.rows);
   } catch (error) {
     next(error);
@@ -71,10 +72,10 @@ const getUserEmail = async (req, res, next) => {
     });
     // console.log('cookie', serialized);
     // http://localhost:3000
-    res.setHeader('Set-Cookie', serialized);
-    // res.cookie('cookieName', serialized);
+    // res.setHeader('Set-Cookie', serialized);
+    res.cookie('cookieName', serialized);
 
-    return res.json('token aceptado');
+    return res.json(serialized);
   } catch (error) {
     next(error);
   }
