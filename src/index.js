@@ -10,7 +10,8 @@ const app = express();
 const server = http.createServer(app);
 
 // importamos la ruta
-const messageRoutes = require('./routes/message.routes');
+const routingRoutes = require('./routes/routing.routes');
+// const authUsersRoutes = require('./routes/authUsersRoutes');
 
 const io = new Server(server, {
   cors: {
@@ -23,12 +24,17 @@ client
   .then((res) => console.log('conectado a la BD'))
   .catch((error) => console.log('error de conexión'));
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+  })
+);
 
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use(messageRoutes);
+app.use(routingRoutes);
 app.use((err, req, res, next) => {
   return res.json({
     message: err.message,
