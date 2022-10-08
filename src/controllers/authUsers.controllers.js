@@ -71,7 +71,7 @@ const getUserEmail = async (req, res, next) => {
     });
     // console.log('cookie', serialized);
     // http://localhost:3000
-    res.setHeader('Set-Cookie', serialized);
+    res.cookie('cookie', serialized);
     // res.cookie('cookieName', serialized);
 
     return res.json('token aceptado');

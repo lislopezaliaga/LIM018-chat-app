@@ -5,7 +5,6 @@ const {
   deleteMessages,
   createMessages,
   updateMessages,
-  
 } = require('../controllers/messages.controllers');
 
 const {
@@ -14,8 +13,10 @@ const {
   getUser,
   deleteUsers,
   updateUsers,
-  getUserEmail
+  getUserEmail,
 } = require('../controllers/authUsers.controllers');
+
+const { getUsser } = require('../controllers/profile.controllers');
 
 const router = Router();
 
@@ -28,7 +29,8 @@ router.put('/messages/:id', updateMessages);
 router.post('/auth/signUp', signUpUsers);
 router.post('/auth/logIn', getUserEmail);
 
-router.get('/users', getAllUsers);
+router.get('/users', getUsser);
+
 router.get('/users/:idUser', getUser);
 // router.get('/userEmail/:emailUser', getUserEmail);
 router.delete('/users/:idUser', deleteUsers);
