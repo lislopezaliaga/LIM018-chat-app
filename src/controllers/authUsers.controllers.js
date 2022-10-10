@@ -17,7 +17,7 @@ const signUpUsers = async (req, res, next) => {
   }
 };
 
-const getAllUsers = async (req, res, next) => {
+const tokenValidate = async (req, res, next) => {
   try {
     // const allMessages = await client.query(`SELECT * FROM users`);
 
@@ -27,12 +27,36 @@ const getAllUsers = async (req, res, next) => {
 
     console.log(user);
 
-    res.json({ name: user.name, email: user.email, status: user.status });
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      status: user.status,
+    });
   } catch (error) {
     return res.status(404).json({ error: 'invalid token' });
     // next(error);
   }
 };
+
+const getAllUser = async (req, res, next) => {
+  try {
+    const status = 1;
+    const result = await client.query(
+      `SELECT * FROM users WHERE status_user=$1`,
+      [status]
+    );
+
+    if (result.rows.length === 0) {
+      // throw new Error();
+      return res.status(404).json({ message: 'not found' });
+    }
+    return res.json(result.rows);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // // eslint-disable-next-line consistent-return
 const getUser = async (req, res, next) => {
   try {
@@ -67,6 +91,7 @@ const getUserEmail = async (req, res, next) => {
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
         // emailUser,
+        id: result.rows[0].id_user,
         email: result.rows[0].email_user,
         name: result.rows[0].name_user,
         status: result.rows[0].status_user,
@@ -85,7 +110,6 @@ const getUserEmail = async (req, res, next) => {
     // http://localhost:3000
     // res.setHeader('Set-Cookie', token);
     res.cookie('cookieName', token);
-    console.log();
 
     return res.json(token);
   } catch (error) {
@@ -133,9 +157,10 @@ const updateUsers = async (req, res, next) => {
 
 module.exports = {
   signUpUsers,
-  getAllUsers,
+  tokenValidate,
   getUser,
   deleteUsers,
   updateUsers,
   getUserEmail,
+  getAllUser,
 };
