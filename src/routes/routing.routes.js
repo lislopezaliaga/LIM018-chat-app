@@ -5,7 +5,6 @@ const {
   deleteMessages,
   createMessages,
   updateMessages,
-  
 } = require('../controllers/messages.controllers');
 
 const {
@@ -14,8 +13,9 @@ const {
   getUser,
   deleteUsers,
   updateUsers,
-  getUserEmail
+  getUserEmail,
 } = require('../controllers/authUsers.controllers');
+const { logoutUser } = require('../controllers/logout.controllers');
 
 const router = Router();
 
@@ -29,9 +29,11 @@ router.post('/auth/signUp', signUpUsers);
 router.post('/auth/logIn', getUserEmail);
 
 router.get('/users', getAllUsers);
+
 router.get('/users/:idUser', getUser);
 // router.get('/userEmail/:emailUser', getUserEmail);
 router.delete('/users/:idUser', deleteUsers);
 router.put('/users/:idUser', updateUsers);
 
+router.post('/logout', logoutUser);
 module.exports = router;

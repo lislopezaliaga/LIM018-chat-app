@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { verify } = require('jsonwebtoken');
 const { serialize } = require('cookie');
 const client = require('../conexion_db');
 
@@ -18,11 +19,18 @@ const signUpUsers = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
   try {
-    const allMessages = await client.query(`SELECT * FROM users`);
-    console.log(req.rawHeaders[9]);
-    res.json(allMessages.rows);
+    // const allMessages = await client.query(`SELECT * FROM users`);
+
+    const tokenLogin = req.headers.authorization;
+
+    const user = verify(tokenLogin, 'secret');
+
+    console.log(user);
+
+    res.json({ name: user.name, email: user.email, status: user.status });
   } catch (error) {
-    next(error);
+    return res.status(404).json({ error: 'invalid token' });
+    // next(error);
   }
 };
 // // eslint-disable-next-line consistent-return
@@ -58,24 +66,28 @@ const getUserEmail = async (req, res, next) => {
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
-        emailUser,
+        // emailUser,
+        email: result.rows[0].email_user,
+        name: result.rows[0].name_user,
+        status: result.rows[0].status_user,
       },
       'secret'
     );
 
-    const serialized = serialize('tokenLogin', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24 * 30,
-      path: '/',
-    });
+    // const serialized = serialize('tokenLogin', token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'none',
+    //   maxAge: 1000 * 60 * 60 * 24 * 30,
+    //   path: '/',
+    // });
     // console.log('cookie', serialized);
     // http://localhost:3000
-    // res.setHeader('Set-Cookie', serialized);
-    res.cookie('cookieName', serialized);
+    // res.setHeader('Set-Cookie', token);
+    res.cookie('cookieName', token);
+    console.log();
 
-    return res.json(serialized);
+    return res.json(token);
   } catch (error) {
     next(error);
   }
