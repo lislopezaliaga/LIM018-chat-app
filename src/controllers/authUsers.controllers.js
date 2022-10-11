@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken');
 const { verify } = require('jsonwebtoken');
-const { serialize } = require('cookie');
+// const { serialize } = require('cookie');
+const bcrypt = require('bcrypt');
 const client = require('../conexion_db');
 
 const signUpUsers = async (req, res, next) => {
   const { nameUser, emailUser, passwordUser } = req.body;
-
+  const hashedPass = await bcrypt.hash(passwordUser, 10);
   try {
     const result = await client.query(
       `INSERT INTO users(name_user, email_user, password_user)  VALUES ($1, $2, $3) RETURNING*`,
-      [nameUser, emailUser, passwordUser]
+      [nameUser, emailUser, hashedPass]
     );
     res.json(result.rows[0]);
   } catch (error) {
@@ -25,7 +26,7 @@ const tokenValidate = async (req, res, next) => {
 
     const user = verify(tokenLogin, 'secret');
 
-    console.log(user);
+    // console.log(user);
 
     res.json({
       id: user.id,
@@ -75,43 +76,49 @@ const getUser = async (req, res, next) => {
   }
 };
 
-const getUserEmail = async (req, res, next) => {
+const loginUser = async (req, res, next) => {
   try {
     const { emailUser, passwordUser } = req.body;
     const result = await client.query(
-      `SELECT * FROM users WHERE email_user=$1 AND password_user=$2`,
-      [emailUser, passwordUser]
+      `SELECT * FROM users WHERE email_user=$1 `,
+      [emailUser]
     );
     if (result.rows.length === 0) {
       // throw new Error();
-      return res.status(404).json({ message: 'Email or Password invalid' });
+      return res.status(404).json({ message: 'Email invalid' });
     }
+    console.log("res", result.rowCount);
+    if (result.rowCount > 0) {
+      const isSamePass = await bcrypt.compare(passwordUser, result.rows[0].password_user);
+      if (isSamePass) {
+        const token = jwt.sign(
+          {
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+            // emailUser,
+            id: result.rows[0].id_user,
+            email: result.rows[0].email_user,
+            name: result.rows[0].name_user,
+            status: result.rows[0].status_user,
+          },
+          'secret'
+        );
 
-    const token = jwt.sign(
-      {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
-        // emailUser,
-        id: result.rows[0].id_user,
-        email: result.rows[0].email_user,
-        name: result.rows[0].name_user,
-        status: result.rows[0].status_user,
-      },
-      'secret'
-    );
+        // const serialized = serialize('tokenLogin', token, {
+        //   httpOnly: true,
+        //   secure: process.env.NODE_ENV === 'production',
+        //   sameSite: 'none',
+        //   maxAge: 1000 * 60 * 60 * 24 * 30,
+        //   path: '/',
+        // });
+        // console.log('cookie', serialized);
+        // http://localhost:3000
+        // res.setHeader('Set-Cookie', token);
+        res.cookie('cookieName', token);
 
-    // const serialized = serialize('tokenLogin', token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   sameSite: 'none',
-    //   maxAge: 1000 * 60 * 60 * 24 * 30,
-    //   path: '/',
-    // });
-    // console.log('cookie', serialized);
-    // http://localhost:3000
-    // res.setHeader('Set-Cookie', token);
-    res.cookie('cookieName', token);
-
-    return res.json(token);
+        return res.json(token);
+      }
+      return res.status(404).json({ message: 'Credentials invalid' });
+    }
   } catch (error) {
     next(error);
   }
@@ -123,7 +130,7 @@ const deleteUsers = async (req, res, next) => {
     const result = await client.query(`DELETE FROM users WHERE id_user=$1`, [
       idUser,
     ]);
-    console.log(result);
+    // console.log(result);
     if (result.rowCount === 0) {
       return res.status(404).json({ message: 'not found' });
     }
@@ -138,11 +145,11 @@ const updateUsers = async (req, res, next) => {
   try {
     const { idUser } = req.params;
     const { nameUser, emailUser, passwordUser, statusUser } = req.body;
-
-    console.log(idUser);
+    const hashedPass = await bcrypt.hash(passwordUser, 10);
+    // console.log(idUser);
     const result = await client.query(
       `UPDATE users SET name_user=$1, email_user=$2, password_user=$3,status_user=$4 WHERE id_user=$5 RETURNING*`,
-      [nameUser, emailUser, passwordUser, statusUser, idUser]
+      [nameUser, emailUser, hashedPass, statusUser, idUser]
     );
 
     if (result.rows.length === 0) {
@@ -161,6 +168,6 @@ module.exports = {
   getUser,
   deleteUsers,
   updateUsers,
-  getUserEmail,
+  loginUser,
   getAllUser,
 };

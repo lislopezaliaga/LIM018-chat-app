@@ -13,7 +13,7 @@ const {
   getUser,
   deleteUsers,
   updateUsers,
-  getUserEmail,
+  loginUser,
   getAllUser,
 } = require('../controllers/authUsers.controllers');
 const { logoutUser } = require('../controllers/logout.controllers');
@@ -31,7 +31,7 @@ router.delete('/messages/:id', deleteMessages);
 router.put('/messages/:id', updateMessages);
 
 router.post('/auth/signUp', signUpUsers);
-router.post('/auth/logIn', getUserEmail);
+router.post('/auth/logIn', loginUser);
 
 router.get('/users', tokenValidate);
 router.get('/allUsers', getAllUser);
