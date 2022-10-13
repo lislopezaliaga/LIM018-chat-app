@@ -40,67 +40,25 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-let newChanels = [];
-io.on('connection', (socket) => {
-  const nickNames = [];
-  socket.on('nuevo usuario', (datos) => {
-    // console.log(datos);
-    nickNames.push(datos);
-    console.log(nickNames);
-    // Nos devuelve el indice si el dato existe, es decir, si ya existe el nombre de usuario:
-    // if (nickNames.indexOf(datos) != -1) {
-    //   callback(false);
-    // } else {
-    //   //Si no existe le respondemos al cliente con true y agregamos el nuevo usuario:
-    //   callback(true);
-    //   socket.nickname = datos;
 
-    //   //Enviamos al cliente el array de usuarios:
-    //   actualizarUsuarios();
-    // }
+io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
+
+  socket.on('userConected', (user) => {
+   console.log(user);
+    socket.broadcast.emit('users', user);
   });
 
-  console.log('a user connected', socket.id);
   socket.on('chatmessage', (message) => {
-
     console.log(message);
     socket.broadcast.emit('message', {
       body: message.message,
       from: message.user,
     });
   });
-  // io.on("newUser", data => {
-  //   users.push(data)
-  //   io.emit("newUserResponse", users)
-  // })
+
   socket.on('nameChanel', (chanel) => {
-    newChanels.push(chanel);
-  console.log(newChanels);
-    socket.emit('namesChanels', newChanels);
+    socket.broadcast.emit('namesChanels', chanel);
   });
 });
 server.listen(port);
-console.log('server');
-
-// const io = require('socket.io')(http);
-
-// app.get('/', (req, res) => {
-//   res.sendFile(`${__dirname}/index.html`);
-// });
-
-// io.on('connection', (socket) => {
-//   console.log('a user connected');
-//   socket.on('disconnect', () => {
-//     console.log('user disconnected');
-//   });
-// });
-
-// io.on('connection', (socket) => {
-//   socket.on('chat message', (msg) => {
-//     io.emit('chat message', msg);
-//   });
-// });
-
-// http.listen(port, () => {
-//   console.log(`Socket.IO server running at http://localhost:${port}/`);
-// });
