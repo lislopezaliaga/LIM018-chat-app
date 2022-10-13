@@ -1,12 +1,12 @@
 const client = require('../conexion_db');
 
 const createChanel = async (req, res, next) => {
-  const { nameChanel, idDueño } = req.body;
+  const { namechanel, idDueño } = req.body;
 
   try {
     const result = await client.query(
-      `INSERT INTO chanel(name, id_dueño) VALUES ($1, $2) RETURNING*`,
-      [nameChanel, idDueño]
+      `INSERT INTO chanel(namechanel, id_dueño) VALUES ($1, $2) RETURNING*`,
+      [namechanel, idDueño]
     );
     res.json(result.rows[0]);
   } catch (error) {

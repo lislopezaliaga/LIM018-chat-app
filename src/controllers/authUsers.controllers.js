@@ -87,9 +87,12 @@ const loginUser = async (req, res, next) => {
       // throw new Error();
       return res.status(404).json({ message: 'Email invalid' });
     }
-    console.log("res", result.rowCount);
+    console.log('res', result.rowCount);
     if (result.rowCount > 0) {
-      const isSamePass = await bcrypt.compare(passwordUser, result.rows[0].password_user);
+      const isSamePass = await bcrypt.compare(
+        passwordUser,
+        result.rows[0].password_user
+      );
       if (isSamePass) {
         const token = jwt.sign(
           {

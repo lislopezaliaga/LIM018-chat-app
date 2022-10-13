@@ -6,7 +6,7 @@ const users = function insertUsers(name, email, password, estado) {
   client
     .query(
       `INSERT INTO public.users(name, email, password, estado)
-          VALUES ( '${name}', '${email}', '${password}', ${estado})`
+        VALUES ( '${name}', '${email}', '${password}', ${estado})`
     )
     .then((response) => {
       console.log('conectado');
