@@ -5,7 +5,7 @@ const createChanel = async (req, res, next) => {
 
   try {
     const result = await client.query(
-      `INSERT INTO chanel(namechanel, id_dueño) VALUES ($1, $2) RETURNING*`,
+      `INSERT INTO channel(namechanel, id_creator) VALUES ($1, $2) RETURNING*`,
       [namechanel, idDueño]
     );
     res.json(result.rows[0]);
@@ -16,7 +16,7 @@ const createChanel = async (req, res, next) => {
 
 const getAllChanels = async (req, res, next) => {
   try {
-    const allMessages = await client.query(`SELECT * FROM chanel`);
+    const allMessages = await client.query(`SELECT * FROM channel`);
     res.json(allMessages.rows);
   } catch (error) {
     next(error);
