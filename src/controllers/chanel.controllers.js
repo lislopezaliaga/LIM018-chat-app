@@ -8,9 +8,10 @@ const createChanel = async (req, res, next) => {
       `INSERT INTO chanel(namechanel, id_dueño) VALUES ($1, $2) RETURNING*`,
       [namechanel, idDueño]
     );
+
     res.json(result.rows[0]);
   } catch (error) {
-    next(error);
+    return res.status(404).json({ message: '*Este canal existe' });
   }
 };
 
