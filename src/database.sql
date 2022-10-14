@@ -34,6 +34,7 @@ CREATE TABLE "message" (
   "text_message" varchar(255),
   "id_user" int,
   "date_time" TIMESTAMP,
+  "name_user" varchar(255),
   "id_channel" int,
   PRIMARY KEY ("id_mensaje"),
    CONSTRAINT "FK_users"

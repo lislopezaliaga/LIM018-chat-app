@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const {
-  getAllMessages,
   getMessage,
   deleteMessages,
   createMessages,
@@ -16,17 +15,18 @@ const {
   loginUser,
   getAllUser,
 } = require('../controllers/authUsers.controllers');
+
 const { logoutUser } = require('../controllers/logout.controllers');
 const {
   createChanel,
   getAllChanels,
+  getMessageChannelGrl,
 } = require('../controllers/chanel.controllers');
 
 const router = Router();
 
 router.post('/messages', createMessages);
-router.get('/messages', getAllMessages);
-router.get('/messages/:id', getMessage);
+router.post('/general/messages', getMessage);
 router.delete('/messages/:id', deleteMessages);
 router.put('/messages/:id', updateMessages);
 
@@ -46,5 +46,6 @@ router.post('/logout', logoutUser);
 // rutas de chanels
 router.post('/chanel', createChanel);
 router.get('/chanel', getAllChanels);
+router.get('/channelGrl', getMessageChannelGrl);
 
 module.exports = router;

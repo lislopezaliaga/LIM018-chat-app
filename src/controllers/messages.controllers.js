@@ -1,20 +1,27 @@
 const client = require('../conexion_db');
 
-const getAllMessages = async (req, res, next) => {
+const createMessages = async (req, res, next) => {
+  const { textMessage, idUser, dateTime, idChannel, nameUser } = req.body;
+
   try {
-    const allMessages = await client.query(`SELECT * FROM message`);
-    res.json(allMessages.rows);
+    const result = await client.query(
+      `INSERT INTO message(text_message, id_user, date_time, id_channel, name_user) VALUES ($1, $2, $3, $4, $5) RETURNING*`,
+      [textMessage, idUser, dateTime, idChannel, nameUser]
+    );
+    res.json(result.rows[0]);
   } catch (error) {
     next(error);
   }
 };
+
+
 // eslint-disable-next-line consistent-return
 const getMessage = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { idChannel } = req.body;
     const result = await client.query(
-      `SELECT * FROM message WHERE id_mensaje=$1`,
-      [id]
+      `SELECT * FROM message WHERE id_channel=$1`,
+      [idChannel]
     );
     if (result.rows.length === 0) {
       // throw new Error();
@@ -26,19 +33,8 @@ const getMessage = async (req, res, next) => {
   }
 };
 
-const createMessages = async (req, res, next) => {
-  const { textMessage } = req.body;
 
-  try {
-    const result = await client.query(
-      `INSERT INTO message(text_message) VALUES ($1) RETURNING*`,
-      [textMessage]
-    );
-    res.json(result.rows[0]);
-  } catch (error) {
-    next(error);
-  }
-};
+
 
 const deleteMessages = async (req, res, next) => {
   try {
@@ -80,7 +76,6 @@ const updateMessages = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllMessages,
   getMessage,
   createMessages,
   deleteMessages,

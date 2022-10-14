@@ -45,16 +45,12 @@ io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
 
   socket.on('userConected', (user) => {
-   console.log(user);
+  //  console.log(user);
     socket.broadcast.emit('users', user);
   });
 
   socket.on('chatmessage', (message) => {
-    console.log(message);
-    socket.broadcast.emit('message', {
-      body: message.message,
-      from: message.user,
-    });
+    socket.broadcast.emit('message', message);
   });
 
   socket.on('nameChanel', (chanel) => {
