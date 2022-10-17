@@ -1,12 +1,12 @@
 const client = require('../conexion_db');
 
 const createMessages = async (req, res, next) => {
-  const { textMessage, idUser, dateTime, idChannel, nameUser } = req.body;
+  const { textmessage, idUser, dateTime, idChannel, nameuser } = req.body;
 
   try {
     const result = await client.query(
-      `INSERT INTO message(text_message, id_user, date_time, id_channel, name_user) VALUES ($1, $2, $3, $4, $5) RETURNING*`,
-      [textMessage, idUser, dateTime, idChannel, nameUser]
+      `INSERT INTO message(textmessage, id_user, date_time, id_channel, nameuser) VALUES ($1, $2, $3, $4, $5) RETURNING*`,
+      [textmessage, idUser, dateTime, idChannel, nameuser]
     );
     res.json(result.rows[0]);
   } catch (error) {

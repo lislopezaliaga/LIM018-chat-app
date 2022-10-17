@@ -50,10 +50,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chatmessage', (message) => {
+    console.log(message);
     socket.broadcast.emit('message', message);
   });
 
   socket.on('nameChanel', (chanel) => {
+    console.log(chanel);
     socket.broadcast.emit('namesChanels', chanel);
   });
 });
