@@ -33,9 +33,6 @@ const getMessage = async (req, res, next) => {
   }
 };
 
-
-
-
 const deleteMessages = async (req, res, next) => {
   try {
     const { id } = req.params;
