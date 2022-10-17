@@ -40,22 +40,28 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
+const allUsers = [];
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
 
   socket.on('userConected', (user) => {
-  //  console.log(user);
-    socket.broadcast.emit('users', user);
+    allUsers.push(user);
   });
+  socket.emit('allUsers', allUsers);
 
+  // socket.on('leave', (userLogout) => {
+  //   // console.log('userLogout', userLogout);
+  //   allUsers = allUsers.filter((e) => e.id !== userLogout.id);
+  //   // console.log('salida ', allUsers);
+  // });
   socket.on('chatmessage', (message) => {
-    console.log(message);
+    // console.log(message);
     socket.broadcast.emit('message', message);
   });
 
   socket.on('nameChanel', (chanel) => {
-    console.log(chanel);
+    // console.log(chanel);
     socket.broadcast.emit('namesChanels', chanel);
   });
 });
