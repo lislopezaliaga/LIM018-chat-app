@@ -40,16 +40,20 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
+
 const allUsers = [];
-
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
+  // console.log('a user connected', socket.id);
 
-  socket.on('userConected', (user) => {
-    allUsers.push(user);
-  });
-  socket.emit('allUsers', allUsers);
+  // socket.on('userConected', (user) => {
+  //   console.log('user', user);
+  //   allUsers.push(user);
+  //   console.log('allUsers', allUsers);
 
+  // });
+
+  // socket.emit('allUsers', allUsers);
+  console.log('allUsers', allUsers);
   // socket.on('leave', (userLogout) => {
   //   // console.log('userLogout', userLogout);
   //   allUsers = allUsers.filter((e) => e.id !== userLogout.id);
