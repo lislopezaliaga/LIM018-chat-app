@@ -40,10 +40,13 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
+
 let allUsers = [];
 
+
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
+  // console.log('a user connected', socket.id);
+
 
   socket.on('userConected', (user) => {
     const userDuplicate = allUsers.find((element) => element.id === user.id);
@@ -58,6 +61,7 @@ io.on('connection', (socket) => {
     allUsers = allUsers.filter((e) => e.id !== userLogout.id);
     socket.broadcast.emit('allUsers', allUsers);
   });
+
 
   socket.on('chatmessage', (message) => {
     socket.broadcast.emit('message', message);
