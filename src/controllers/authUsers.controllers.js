@@ -4,6 +4,45 @@ const { verify } = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const client = require('../conexion_db');
 
+const updateUsers = async (req, res, next) => {
+  try {
+    const { idUser } = req.params;
+    const { nameUser, emailUser, passwordUser, statusUser } = req.body;
+    const hashedPass = await bcrypt.hash(passwordUser, 10);
+    // console.log(idUser);
+    const result = await client.query(
+      `UPDATE users SET name_user=$1, email_user=$2, password_user=$3,status_user=$4 WHERE id_user=$5 RETURNING*`,
+      [nameUser, emailUser, hashedPass, statusUser, idUser]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'not found' });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
+const updateStatusUser = async (req, res, next) => {
+  try {
+    const { statusUser, idUser } = req.body;
+
+    const result = await client.query(
+      `UPDATE users SET status_user=$1 WHERE id_user=$2 RETURNING*`,
+      [statusUser, idUser]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'not found' });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const signUpUsers = async (req, res, next) => {
   const { nameUser, emailUser, passwordUser } = req.body;
   const hashedPass = await bcrypt.hash(passwordUser, 10);
@@ -40,7 +79,7 @@ const tokenValidate = async (req, res, next) => {
   }
 };
 
-const getAllUser = async (req, res, next) => {
+const usersConnected = async (req, res, next) => {
   try {
     const status = 1;
     const result = await client.query(
@@ -144,27 +183,6 @@ const deleteUsers = async (req, res, next) => {
   }
 };
 
-const updateUsers = async (req, res, next) => {
-  try {
-    const { idUser } = req.params;
-    const { nameUser, emailUser, passwordUser, statusUser } = req.body;
-    const hashedPass = await bcrypt.hash(passwordUser, 10);
-    // console.log(idUser);
-    const result = await client.query(
-      `UPDATE users SET name_user=$1, email_user=$2, password_user=$3,status_user=$4 WHERE id_user=$5 RETURNING*`,
-      [nameUser, emailUser, hashedPass, statusUser, idUser]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'not found' });
-    }
-
-    return res.json(result.rows[0]);
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports = {
   signUpUsers,
   tokenValidate,
@@ -172,5 +190,6 @@ module.exports = {
   deleteUsers,
   updateUsers,
   loginUser,
-  getAllUser,
+  usersConnected,
+  updateStatusUser,
 };
