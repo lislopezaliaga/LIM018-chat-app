@@ -41,31 +41,33 @@ app.use((err, req, res, next) => {
   });
 });
 
-const allUsers = [];
+let allUsers = [];
+
+
 io.on('connection', (socket) => {
   // console.log('a user connected', socket.id);
 
-  // socket.on('userConected', (user) => {
-  //   console.log('user', user);
-  //   allUsers.push(user);
-  //   console.log('allUsers', allUsers);
 
-  // });
+  socket.on('userConected', (user) => {
+    const userDuplicate = allUsers.find((element) => element.id === user.id);
 
-  // socket.emit('allUsers', allUsers);
-  console.log('allUsers', allUsers);
-  // socket.on('leave', (userLogout) => {
-  //   // console.log('userLogout', userLogout);
-  //   allUsers = allUsers.filter((e) => e.id !== userLogout.id);
-  //   // console.log('salida ', allUsers);
-  // });
+    if (!userDuplicate) {
+      allUsers.push(user);
+      socket.broadcast.emit('allUsers', allUsers);
+    }
+  });
+
+  socket.on('userDisconnected', (userLogout) => {
+    allUsers = allUsers.filter((e) => e.id !== userLogout.id);
+    socket.broadcast.emit('allUsers', allUsers);
+  });
+
+
   socket.on('chatmessage', (message) => {
-    // console.log(message);
     socket.broadcast.emit('message', message);
   });
 
   socket.on('nameChanel', (chanel) => {
-    // console.log(chanel);
     socket.broadcast.emit('namesChanels', chanel);
   });
 });
