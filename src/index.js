@@ -13,16 +13,12 @@ const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
 
+// configuracion de cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
 });
-// cloudinary.config({
-//   cloud_name: 'dv95g7xon',
-//   api_key: '577194571961552',
-//   api_secret: 'XgKssq9aM150V0gzohlfDW7fcts',
-// });
 
 app.use(cors());
 app.delete('/:public_id', async (req, res) => {

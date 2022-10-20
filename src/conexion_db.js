@@ -11,14 +11,4 @@ const client = new Client({
   ssl: db.ssl,
 });
 
-// const client = new Client({
-//   host: 'dpg-cd89736n6mpnkghn2bk0-a.ohio-postgres.render.com',
-//   user: 'chatowl',
-//   port: 5432,
-//   database: 'default_database',
-//   password: 'P3hOipDSV95cr2S4iD5YfgDdiAJlAhpA',
-// });
-
-// console.log(client);
-
 module.exports = client;
