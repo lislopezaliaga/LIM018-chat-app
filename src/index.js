@@ -22,7 +22,7 @@ const io = new Server(server, {
 client
   .connect()
   .then((res) => console.log('conectado a la BD'))
-  .catch((error) => console.log('error de conexión'));
+  .catch((error) => console.log('error de conexión', error));
 
 app.use(
   cors({
