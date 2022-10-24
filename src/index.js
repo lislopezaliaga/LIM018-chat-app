@@ -4,32 +4,11 @@ const { Server } = require('socket.io');
 const http = require('http');
 const cors = require('cors');
 
-const cloudinary = require('cloudinary');
-require('dotenv').config();
-
 const client = require('./conexion_db');
 
 const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
-
-// configuracion de cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
-
-// app.use(cors());
-// app.delete('/:public_id', async (req, res) => {
-//   const { public_id } = req.params;
-//   try {
-//     await cloudinary.uploader.destroy(public_id);
-//     res.status(200).send();
-//   } catch (error) {
-//     res.status(400).send();
-//   }
-// });
 
 // importamos la ruta
 const routingRoutes = require('./routes/routing.routes');
@@ -81,6 +60,18 @@ io.on('connection', (socket) => {
     allUsers = allUsers.filter((e) => e.id !== userLogout.id);
     socket.broadcast.emit('allUsers', allUsers);
   });
+  socket.on('userChanged', (user) => {
+    allUsers = allUsers.map((e) => {
+      if (e.id === user.id) {
+        e.imguser = user.imguser;
+        e.name = user.name;
+
+      }
+      return e;
+    });
+
+    socket.broadcast.emit('allUsers', allUsers);
+  });
 
   socket.on('chatmessage', (message) => {
     socket.broadcast.emit('message', message);
@@ -91,3 +82,7 @@ io.on('connection', (socket) => {
   });
 });
 server.listen(port);
+
+module.exports = {
+  app,
+};

@@ -45,11 +45,13 @@ const updateStatusUser = async (req, res, next) => {
 
 const signUpUsers = async (req, res, next) => {
   const { nameUser, emailUser, passwordUser } = req.body;
+  const imgUser =
+    'https://res.cloudinary.com/dv95g7xon/image/upload/v1666386036/unfcoqck6jietlr7jwhi.png';
   const hashedPass = await bcrypt.hash(passwordUser, 10);
   try {
     const result = await client.query(
-      `INSERT INTO users(name_user, email_user, password_user)  VALUES ($1, $2, $3) RETURNING*`,
-      [nameUser, emailUser, hashedPass]
+      `INSERT INTO users(name_user, email_user, password_user, imguser)  VALUES ($1, $2, $3, $4) RETURNING*`,
+      [nameUser, emailUser, hashedPass, imgUser]
     );
     res.json(result.rows[0]);
   } catch (error) {
@@ -72,6 +74,7 @@ const tokenValidate = async (req, res, next) => {
       name: user.name,
       email: user.email,
       status: user.status,
+      imguser: user.imguser,
     });
   } catch (error) {
     return res.status(404).json({ error: 'invalid token' });
@@ -141,6 +144,7 @@ const loginUser = async (req, res, next) => {
             email: result.rows[0].email_user,
             name: result.rows[0].name_user,
             status: result.rows[0].status_user,
+            imguser: result.rows[0].imguser,
           },
           'secret'
         );
