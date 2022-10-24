@@ -54,7 +54,28 @@ const deleteChannel = async (req, res, next) => {
       return res.status(404).json({ message: 'not found' });
     }
 
-    return res.sendStatus(204);
+    return res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+const updateChannel = async (req, res, next) => {
+  try {
+    const { nameChannel, idChannel } = req.body;
+
+    const result = await client.query(
+      `UPDATE channel SET namechanel=$1 WHERE id_channel=$2 RETURNING*`,
+      [nameChannel, idChannel]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'not found' });
+    }
+
+    return res.json(result.rows[0]);
   } catch (error) {
     next(error);
   }
@@ -65,4 +86,5 @@ module.exports = {
   getAllChanels,
   getMessageChannelGrl,
   deleteChannel,
+  updateChannel,
 };

@@ -127,9 +127,8 @@ const loginUser = async (req, res, next) => {
     );
     if (result.rows.length === 0) {
       // throw new Error();
-      return res.status(404).json({ message: 'Email invalid' });
+      return res.status(404).json({ message: 'Correo inválido' });
     }
-    console.log('res', result.rowCount);
     if (result.rowCount > 0) {
       const isSamePass = await bcrypt.compare(
         passwordUser,
@@ -163,7 +162,7 @@ const loginUser = async (req, res, next) => {
 
         return res.json(token);
       }
-      return res.status(404).json({ message: 'Credentials invalid' });
+      return res.status(404).json({ message: 'Correo o contraseña inválidas' });
     }
   } catch (error) {
     next(error);

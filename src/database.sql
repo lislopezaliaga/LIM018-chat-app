@@ -58,3 +58,6 @@ CREATE TABLE "directmessage" (
   --     REFERENCES "channel"("id_channel")
 );
 
+INSERT INTO public.channel(
+	id_channel, namechanel, id_creator)
+	VALUES (1, channelGeneral, 0);

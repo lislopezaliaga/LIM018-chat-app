@@ -80,6 +80,18 @@ io.on('connection', (socket) => {
   socket.on('nameChanel', (chanel) => {
     socket.broadcast.emit('namesChanels', chanel);
   });
+
+  socket.on('removeChannel', (idChannel) =>{
+    socket.broadcast.emit('removedChannel', idChannel);
+    socket.emit('removedChannel', idChannel);
+
+  });
+
+  socket.on('editChanel', (newDataChannel) =>{
+    socket.broadcast.emit('editedChanel', newDataChannel);
+    socket.emit('editedChanel', newDataChannel);
+
+  });
 });
 server.listen(port);
 
