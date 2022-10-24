@@ -22,7 +22,9 @@ const {
   createChanel,
   getAllChanels,
   getMessageChannelGrl,
+  deleteChannel,
 } = require('../controllers/chanel.controllers');
+
 const { deleteCloudinary } = require('../controllers/cloudinary.controllers');
 const { updateProfile } = require('../controllers/updateProfile.controllers');
 
@@ -51,6 +53,8 @@ router.post('/logout', logoutUser);
 router.post('/chanel', createChanel);
 router.get('/chanel', getAllChanels);
 router.get('/channelGrl', getMessageChannelGrl);
+router.delete('/channel/:idChannel', deleteChannel);
+
 
 // cloudinary
 router.delete('/:public_id', deleteCloudinary);

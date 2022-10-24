@@ -24,7 +24,6 @@ const getAllChanels = async (req, res, next) => {
   }
 };
 
-
 // chatGeneral
 const getMessageChannelGrl = async (req, res, next) => {
   try {
@@ -43,9 +42,27 @@ const getMessageChannelGrl = async (req, res, next) => {
   }
 };
 
+const deleteChannel = async (req, res, next) => {
+  try {
+    const { idChannel } = req.params;
+    const result = await client.query(
+      `DELETE FROM channel WHERE id_channel=$1`,
+      [idChannel]
+    );
+    // console.log(result);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'not found' });
+    }
+
+    return res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createChanel,
   getAllChanels,
   getMessageChannelGrl,
+  deleteChannel,
 };
