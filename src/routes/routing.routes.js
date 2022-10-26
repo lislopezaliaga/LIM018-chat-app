@@ -14,7 +14,7 @@ const {
   updateUsers,
   loginUser,
   usersConnected,
-  updateStatusUser
+  updateStatusUser,
 } = require('../controllers/authUsers.controllers');
 
 const { logoutUser } = require('../controllers/logout.controllers');
@@ -28,6 +28,10 @@ const {
 
 const { deleteCloudinary } = require('../controllers/cloudinary.controllers');
 const { updateProfile } = require('../controllers/updateProfile.controllers');
+const {
+  createMessagesPersonal,
+  getAllMessagesPersonal,
+} = require('../controllers/chatPersonal.controllers');
 
 const router = Router();
 
@@ -57,6 +61,9 @@ router.get('/channelGrl', getMessageChannelGrl);
 router.delete('/channel/:idChannel', deleteChannel);
 router.put('/channel/update', updateChannel);
 
+// rutas de mensajes directos
+router.post('/direct/messages', createMessagesPersonal);
+router.get('/direct/messages', getAllMessagesPersonal);
 // cloudinary
 router.delete('/:public_id', deleteCloudinary);
 
