@@ -92,6 +92,10 @@ io.on('connection', (socket) => {
     socket.emit('editedChanel', newDataChannel);
 
   });
+
+  socket.on('dataDirectMessage', (message) => {
+    socket.broadcast.emit('messagePersonal', message);
+  });
 });
 server.listen(port);
 
