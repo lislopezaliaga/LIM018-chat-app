@@ -16,7 +16,7 @@ const routingRoutes = require('./routes/routing.routes');
 
 const io = new Server(server, {
   cors: {
-    origin: 'chatowlapp.onrender.com',
+    origin: 'https://chatowlapp.onrender.com/',
   },
 });
 
@@ -28,7 +28,7 @@ client
 app.use(
   cors({
     credentials: true,
-    origin: 'chatowlapp.onrender.com',
+    origin: 'https://chatowlapp.onrender.com/',
   })
 );
 
