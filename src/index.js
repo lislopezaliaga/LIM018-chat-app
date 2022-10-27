@@ -17,6 +17,9 @@ const routingRoutes = require('./routes/routing.routes');
 const io = new Server(server, {
   cors: {
     origin: 'https://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
   },
 });
 
