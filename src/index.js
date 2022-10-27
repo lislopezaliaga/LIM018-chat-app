@@ -15,8 +15,15 @@ const routingRoutes = require('./routes/routing.routes');
 // const authUsersRoutes = require('./routes/authUsersRoutes');
 
 const io = new Server(server, {
+  // cors: {
+  //   origin: 'https://localhost:3000',
+  //   methods: ['GET', 'POST', 'UPDATE', 'DELETE'],
+  // },
   cors: {
     origin: 'https://localhost:3000',
+    methods: ['GET', 'POST', 'UPDATE', 'DELETE'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
   },
 });
 
