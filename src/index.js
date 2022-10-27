@@ -25,7 +25,12 @@ client
   .then((res) => console.log('conectado a la BD'))
   .catch((error) => console.log('error de conexión', error));
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'https://localhost:3000',
+  })
+);
 // app.use((req, res, next) => {
 //   res.header('Access-Control-Allow-Origin', '*');
 //   res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
@@ -40,7 +45,9 @@ app.use(express.json());
 app.use(routingRoutes);
 app.use((err, req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   return res.json({
     message: err.message,
   });
@@ -69,6 +76,7 @@ io.on('connection', (socket) => {
       if (e.id === user.id) {
         e.imguser = user.imguser;
         e.name = user.name;
+
       }
       return e;
     });
@@ -84,14 +92,16 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('namesChanels', chanel);
   });
 
-  socket.on('removeChannel', (idChannel) => {
+  socket.on('removeChannel', (idChannel) =>{
     socket.broadcast.emit('removedChannel', idChannel);
     socket.emit('removedChannel', idChannel);
+
   });
 
-  socket.on('editChanel', (newDataChannel) => {
+  socket.on('editChanel', (newDataChannel) =>{
     socket.broadcast.emit('editedChanel', newDataChannel);
     socket.emit('editedChanel', newDataChannel);
+
   });
 
   socket.on('dataDirectMessage', (message) => {
