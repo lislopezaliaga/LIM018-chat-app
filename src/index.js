@@ -16,7 +16,7 @@ const routingRoutes = require('./routes/routing.routes');
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://chatowl.netlify.app/',
   },
 });
 
@@ -28,7 +28,7 @@ client
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: 'https://chatowl.netlify.app/',
   })
 );
 
