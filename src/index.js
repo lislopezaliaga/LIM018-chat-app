@@ -15,15 +15,19 @@ const routingRoutes = require('./routes/routing.routes');
 // const authUsersRoutes = require('./routes/authUsersRoutes');
 
 const io = new Server(server, {
-  handlePreflightRequest: (req, res) => {
-    const headers = {
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Origin': req.headers.origin, // or the specific origin you want to give access to,
-      'Access-Control-Allow-Credentials': true,
-    };
-    res.writeHead(200, headers);
-    res.end();
+  cors: {
+    origin: 'https://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
   },
+}
+);
+io.origins((origin, callback) => {
+  if (origin !== 'https://localhost:3000') {
+      return callback('origin not allowed', false);
+  }
+  callback(null, true);
 });
 
 client
@@ -51,10 +55,7 @@ app.use(express.json());
 app.use(routingRoutes);
 app.use((err, req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  );
+  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   return res.json({
@@ -85,6 +86,7 @@ io.on('connection', (socket) => {
       if (e.id === user.id) {
         e.imguser = user.imguser;
         e.name = user.name;
+
       }
       return e;
     });
@@ -100,14 +102,16 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('namesChanels', chanel);
   });
 
-  socket.on('removeChannel', (idChannel) => {
+  socket.on('removeChannel', (idChannel) =>{
     socket.broadcast.emit('removedChannel', idChannel);
     socket.emit('removedChannel', idChannel);
+
   });
 
-  socket.on('editChanel', (newDataChannel) => {
+  socket.on('editChanel', (newDataChannel) =>{
     socket.broadcast.emit('editedChanel', newDataChannel);
     socket.emit('editedChanel', newDataChannel);
+
   });
 
   socket.on('dataDirectMessage', (message) => {
