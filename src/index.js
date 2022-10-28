@@ -16,7 +16,8 @@ const routingRoutes = require('./routes/routing.routes');
 
 const io = new Server(server, {
   cors: {
-    origin: 'https://chatowlapp.onrender.com',
+    credentials: true,
+    origin: 'http://localhost:3000',
   },
 });
 
@@ -28,26 +29,9 @@ client
 app.use(
   cors({
     credentials: true,
-    origin: 'https://chatowlapp.onrender.com',
+    origin: 'http://localhost:3000',
   })
 );
-app.use((req, res, next) => {
-  // res.header('Access-Control-Allow-Origin', '*');
-  // res.header(
-  //   'Access-Control-Allow-Headers',
-  //   'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  // );
-  // res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  // res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Accept');
-  //   "Access-Control-Allow-Origin" : "*",
-  //     "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-  //     "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-  // }
-  next();
-});
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -82,6 +66,7 @@ io.on('connection', (socket) => {
       if (e.id === user.id) {
         e.imguser = user.imguser;
         e.name = user.name;
+
       }
       return e;
     });
@@ -97,14 +82,16 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('namesChanels', chanel);
   });
 
-  socket.on('removeChannel', (idChannel) => {
+  socket.on('removeChannel', (idChannel) =>{
     socket.broadcast.emit('removedChannel', idChannel);
     socket.emit('removedChannel', idChannel);
+
   });
 
-  socket.on('editChanel', (newDataChannel) => {
+  socket.on('editChanel', (newDataChannel) =>{
     socket.broadcast.emit('editedChanel', newDataChannel);
     socket.emit('editedChanel', newDataChannel);
+
   });
 
   socket.on('dataDirectMessage', (message) => {
