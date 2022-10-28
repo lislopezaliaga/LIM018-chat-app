@@ -157,8 +157,8 @@ const loginUser = async (req, res, next) => {
         // });
         // console.log('cookie', serialized);
         // http://localhost:3000
-        // res.setHeader('Set-Cookie', token);
-        res.cookie('cookieName', token);
+        res.setHeader('Set-Cookie', token);
+        // res.cookie('cookieName', token);
 
         return res.json(token);
       }

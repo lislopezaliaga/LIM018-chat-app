@@ -10,7 +10,7 @@ const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
 
-// importamos la ruta
+
 const routingRoutes = require('./routes/routing.routes');
 // const authUsersRoutes = require('./routes/authUsersRoutes');
 
