@@ -6,9 +6,6 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    // "db-up": "docker-compose up -d",
-    // "db-status": "docker-compose ps",
-    // "db-down": "docker-compose down",
     "dev": "nodemon src/index.js"
   },
   "dependencies": {
