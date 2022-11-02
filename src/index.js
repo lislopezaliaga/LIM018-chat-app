@@ -16,7 +16,7 @@ const routingRoutes = require('./routes/routing.routes');
 const io = new Server(server, {
   cors: {
     credentials: true,
-    origin: 'https://localhost:3000',
+    origin: 'https://chatowlapp.onrender.com',
   },
 });
 
