@@ -6,23 +6,19 @@ const cors = require('cors');
 
 const client = require('./conexion_db');
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
 
-// importamos la ruta
 const routingRoutes = require('./routes/routing.routes');
 // const authUsersRoutes = require('./routes/authUsersRoutes');
 
 const io = new Server(server, {
-  cors: { credentials: true, origin: 'https://localhost:3000' },
+  cors: {
+    credentials: true,
+    origin: 'https://localhost:3000',
+  },
 });
-// io.origins((origin, callback) => {
-//   if (origin !== 'https://localhost:3000') {
-//       return callback('origin not allowed', false);
-//   }
-//   callback(null, true);
-// });
 
 client
   .connect()
@@ -37,10 +33,7 @@ app.use(
 );
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  );
+  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
@@ -51,17 +44,19 @@ app.use(express.json());
 
 app.use(routingRoutes);
 app.use((err, req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
-  );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+  // res.header('Access-Control-Allow-Origin', '*');
+  // res.header(
+  //   'Access-Control-Allow-Headers',
+  //   'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
+  // );
+  // res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  // res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+  next();
   return res.json({
     message: err.message,
   });
 });
+
 
 let allUsers = [];
 
