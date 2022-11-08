@@ -66,12 +66,12 @@ io.on('connection', (socket) => {
   // console.log('a user connected', socket.id);
 
   socket.on('userConected', (user) => {
-    const userDuplicate = allUsers.find((element) => element.id === user.id);
+    // const userDuplicate = allUsers.find((element) => element.id === user.id);
 
-    if (!userDuplicate) {
+    // if (!userDuplicate) {
       allUsers.push(user);
       socket.broadcast.emit('allUsers', allUsers);
-    }
+    // }
   });
 
   socket.on('userDisconnected', (userLogout) => {
