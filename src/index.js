@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('userDisconnected', (userLogout) => {
-    // allUsers = allUsers.filter((e) => e.id !== userLogout.id);
+    allUsers = allUsers.filter((e) => e.id !== userLogout.id);
     socket.broadcast.emit('userLogout', userLogout);
   });
   socket.on('userChanged', (user) => {
