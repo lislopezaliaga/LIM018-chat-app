@@ -29,7 +29,7 @@ client
 app.use(
   cors({
     credentials: true,
-    origin: true,
+    origin: 'https://chatowlapp-2syg.onrender.com',
   })
 );
 app.use((req, res, next) => {
