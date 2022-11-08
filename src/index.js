@@ -10,7 +10,6 @@ const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
 
-
 const routingRoutes = require('./routes/routing.routes');
 // const authUsersRoutes = require('./routes/authUsersRoutes');
 
@@ -76,8 +75,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('userDisconnected', (userLogout) => {
-    allUsers = allUsers.filter((e) => e.id !== userLogout.id);
-    socket.broadcast.emit('allUsers', allUsers);
+    // allUsers = allUsers.filter((e) => e.id !== userLogout.id);
+    socket.broadcast.emit('userLogout', userLogout);
   });
   socket.on('userChanged', (user) => {
     allUsers = allUsers.map((e) => {
