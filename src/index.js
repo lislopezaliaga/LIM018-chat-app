@@ -17,7 +17,7 @@ const io = new Server(server, {
   cors: {
     credentials: true,
     origin: '*',
-    // origin: 'https://chatowlapp-2syg.onrender.com',
+ 
   },
 });
 
@@ -29,8 +29,8 @@ client
 app.use(
   cors({
     credentials: true,
-    // origin: 'https://chatowlapp-2syg.onrender.com',
-    origin: '*',
+    origin: true,
+
   })
 );
 app.use((req, res, next) => {
