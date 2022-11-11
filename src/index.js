@@ -16,8 +16,8 @@ const routingRoutes = require('./routes/routing.routes');
 const io = new Server(server, {
   cors: {
     credentials: true,
-    origin: '*',
-    // origin: 'https://chatowlapp-2syg.onrender.com',
+    // origin: '*',
+    origin: 'https://chatowlapp-2syg.onrender.com',
   },
 });
 
@@ -29,8 +29,8 @@ client
 app.use(
   cors({
     credentials: true,
-    // origin: 'https://chatowlapp-2syg.onrender.com',
-    origin: '*',
+    origin: 'https://chatowlapp-2syg.onrender.com',
+    // origin: '*',
   })
 );
 app.use((req, res, next) => {
@@ -76,6 +76,7 @@ io.on('connection', (socket) => {
 
   socket.on('userDisconnected', (userLogout) => {
     allUsers = allUsers.filter((e) => e.id !== userLogout.id);
+
     socket.broadcast.emit('userLogout', userLogout);
   });
   socket.on('userChanged', (user) => {
@@ -87,7 +88,8 @@ io.on('connection', (socket) => {
       return e;
     });
 
-    socket.broadcast.emit('allUsers', allUsers);
+    // socket.broadcast.emit('allUsers', allUsers);
+    socket.broadcast.emit('userchanged', user);
   });
 
   socket.on('chatmessage', (message) => {
