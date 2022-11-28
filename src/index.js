@@ -16,26 +16,29 @@ const routingRoutes = require('./routes/routing.routes');
 const io = new Server(server, {
   cors: {
     credentials: true,
-    // origin: '*',
-    origin: 'https://chatowlapp-2syg.onrender.com',
+    origin: '*',
+    // origin: 'https://chatowlapp-2syg.onrender.com',
   },
 });
 
 client
   .connect()
-  .then((res) => console.log('conectado a la BD'))
+  .then(() => console.log('conectado a la BD'))
   .catch((error) => console.log('error de conexión', error));
 
 app.use(
   cors({
     credentials: true,
-    origin: 'https://chatowlapp-2syg.onrender.com',
-    // origin: '*',
+    // origin: 'https://chatowlapp-2syg.onrender.com',
+    origin: '*',
   })
 );
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method'
+  );
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
@@ -59,7 +62,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-
 let allUsers = [];
 
 io.on('connection', (socket) => {
@@ -69,8 +71,8 @@ io.on('connection', (socket) => {
     // const userDuplicate = allUsers.find((element) => element.id === user.id);
 
     // if (!userDuplicate) {
-      allUsers.push(user);
-      socket.broadcast.emit('allUsers', allUsers);
+    allUsers.push(user);
+    socket.broadcast.emit('allUsers', allUsers);
     // }
   });
 
